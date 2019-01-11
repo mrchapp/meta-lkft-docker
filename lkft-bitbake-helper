@@ -1,0 +1,45 @@
+#!/bin/bash
+
+function check_var
+{
+  if [ -z "${!1}" ]; then
+    echo "WARNING: Variable $1 is undefined."
+    return 1
+  fi
+}
+
+[ -z "${DISTRO}" ] && export DISTRO="lkft"
+
+if ! check_var MACHINE; then
+  echo "Can't build without it."
+  exit 1
+fi
+check_var KERNEL_RECIPE
+check_var KERNEL_VERSION
+
+DEFAULT_MANIFEST_URL="https://github.com/96boards/oe-rpb-manifest"
+DEFAULT_MANIFEST_BRANCH="lkft/rocko"
+FORCE_RINIT=""
+
+if [ -n "${MANIFEST_URL}" -a ! "${MANIFEST_URL}" = "${DEFAULT_MANIFEST_URL}" ]; then
+  FORCE_RINIT=1
+fi
+
+if [ -n "{MANIFEST_BRANCH}" -a ! "${MANIFEST_BRANCH}" = "${DEFAULT_MANIFEST_BRANCH}" ]; then
+  FORCE_RINIT=1
+fi
+
+cd /oe
+
+if [ -n "${FORCE_RINIT}" ]; then
+  $HOME/bin/repo init -b "${MANIFEST_BRANCH}" -u "${MANIFEST_URL}"
+fi
+$HOME/bin/repo sync --force-sync
+
+sudo chown -R lkftuser /oe/build-lkft
+:>>/oe/build-lkft/pre
+:>>/oe/build-lkft/post
+chmod 777 /oe/build-lkft/pre /oe/build-lkft/post
+
+echo "Running with parameters: [$@]"
+/bin/bash --rcfile <(cat /etc/bash.bashrc $HOME/.bashrc /oe/setup-environment && echo /oe/build-lkft/pre && echo "$@; export ret=\$?" && echo /oe/build-lkft/post && echo "exit \$ret")

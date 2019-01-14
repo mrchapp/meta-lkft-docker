@@ -37,25 +37,27 @@ RUN dpkg --add-architecture i386 \
 
 ENV LC_ALL=en_US.UTF-8
 
-RUN useradd -m lkftuser \
- && mkdir /oe && chown lkftuser:lkftuser /oe \
- && echo 'lkftuser ALL = NOPASSWD: ALL' > /etc/sudoers.d/lkft \
- && chmod 0440 /etc/sudoers.d/lkft
+RUN useradd -m oeuser \
+ && mkdir -p /oe/rpb && chown -R oeuser:oeuser /oe \
+ && echo 'oeuser ALL = NOPASSWD: ALL' > /etc/sudoers.d/rpb \
+ && chmod 0440 /etc/sudoers.d/rpb
 
-USER lkftuser
+USER oeuser
 
-WORKDIR /oe
+WORKDIR /oe/rpb
 
-RUN git config --global user.name "LKFT OE User" \
- && git config --global user.email "lkft-maintainers@lists.linaro.org" \
+RUN git config --global user.name "RPB OE User" \
+ && git config --global user.email "openembedded@lists.linaro.org" \
  && git config --global color.ui auto \
  && mkdir -p $HOME/bin \
  && wget https://storage.googleapis.com/git-repo-downloads/repo -O $HOME/bin/repo \
  && chmod +x $HOME/bin/repo
 
-RUN $HOME/bin/repo init -b lkft/rocko -u https://github.com/96boards/oe-rpb-manifest \
+RUN $HOME/bin/repo init -b thud -u https://github.com/96boards/oe-rpb-manifest \
  && $HOME/bin/repo sync
 
-COPY lkft-bitbake-helper /home/lkftuser/bin/lkft-bitbake-helper
+COPY rpb-bitbake-helper /home/oeuser/bin/rpb-bitbake-helper
 
-ENTRYPOINT ["/home/lkftuser/bin/lkft-bitbake-helper"]
+RUN ln -s /oe/downloads && ln -s /oe/sstate-cache
+
+ENTRYPOINT ["/home/oeuser/bin/rpb-bitbake-helper"]

@@ -53,7 +53,7 @@ RUN git config --global user.name "LKFT OE User" \
  && wget https://storage.googleapis.com/git-repo-downloads/repo -O $HOME/bin/repo \
  && chmod +x $HOME/bin/repo
 
-RUN $HOME/bin/repo init -b lkft/rocko -u https://github.com/96boards/oe-rpb-manifest \
+RUN $HOME/bin/repo init -b lkft/sumo -u https://github.com/96boards/oe-rpb-manifest \
  && $HOME/bin/repo sync
 
 COPY lkft-bitbake-helper /home/lkftuser/bin/lkft-bitbake-helper

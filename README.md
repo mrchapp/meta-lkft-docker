@@ -8,7 +8,7 @@ docker run -it \
   -v /opt/oe/downloads:/oe/downloads \
   -v /opt/oe/sstate-cache:/oe/sstate-cache \
   -v $(pwd)/build:/oe/build-lkft \
-  mrchapp/lkft-rocko   bitbake rpb-console-image-lkft
+  mrchapp/lkft-sumo   bitbake rpb-console-image-lkft
 ```
 
 Inside the image, these are the important directories:

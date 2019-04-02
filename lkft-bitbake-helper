@@ -18,7 +18,7 @@ check_var KERNEL_RECIPE
 check_var KERNEL_VERSION
 
 DEFAULT_MANIFEST_URL="https://github.com/96boards/oe-rpb-manifest"
-DEFAULT_MANIFEST_BRANCH="lkft/rocko"
+DEFAULT_MANIFEST_BRANCH="lkft/sumo"
 FORCE_RINIT=""
 
 if [ -n "${MANIFEST_URL}" -a ! "${MANIFEST_URL}" = "${DEFAULT_MANIFEST_URL}" ]; then

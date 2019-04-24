@@ -1,7 +1,7 @@
 FROM debian:stretch-slim
 MAINTAINER Daniel Díaz <daniel.diaz@linaro.org>
 
-RUN dpkg --add-architecture i386 \
+RUN if [ "$(uname -m)" = "x86_64" ]; then dpkg --add-architecture i386; fi \
  && echo 'locales locales/locales_to_be_generated multiselect C.UTF-8 UTF-8, en_US.UTF-8 UTF-8 ' | debconf-set-selections \
  && echo 'locales locales/default_environment_locale select en_US.UTF-8' | debconf-set-selections \
  && apt-get update \
